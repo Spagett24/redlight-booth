@@ -1,6 +1,6 @@
 import qrcode
 
-url = "123456789"
+url = "https://redlight-booth.onrender.com"
 
 img = qrcode.make(url)
 

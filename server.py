@@ -1,6 +1,23 @@
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
 import random
+import sqlite3
+
+# Create / connect database
+conn = sqlite3.connect("booth.db", check_same_thread=False)
+cursor = conn.cursor()
+
+# Create table if it doesn't exist
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS booth_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT,
+    verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    used INTEGER DEFAULT 0
+)
+""")
+
+conn.commit()
 
 app = FastAPI()
 
@@ -68,18 +85,23 @@ def request_code(email: str = Form(...)):
     </html>
     """
 
-
 # -----------------------------
 # Verify code
 # -----------------------------
 @app.post("/verify_code", response_class=HTMLResponse)
 def verify_code(email: str = Form(...), code: str = Form(...)):
-    global authorized
 
     stored = pending_codes.get(email)
 
     if stored and stored == code:
-        authorized = True
+
+        # create booth session
+        cursor.execute(
+            "INSERT INTO booth_sessions (email, used) VALUES (?, 0)",
+            (email,)
+        )
+        conn.commit()
+
         del pending_codes[email]
 
         return """
@@ -101,15 +123,35 @@ def verify_code(email: str = Form(...), code: str = Form(...)):
     """
 
 
+
 # -----------------------------
 # Raspberry Pi polling endpoint
 # -----------------------------
 @app.get("/booth_status")
 def booth_status():
-    global authorized
 
-    if authorized:
-        authorized = False
+    # find first unused session
+    cursor.execute(
+        """
+        SELECT id FROM booth_sessions
+        WHERE used = 0
+        AND verified_at >= datetime('now', '-6 minutes')
+        ORDER BY verified_at
+        LIMIT 1
+        """
+    )
+    row = cursor.fetchone()
+
+    if row:
+        session_id = row[0]
+
+        # mark it used so it cannot trigger again
+        cursor.execute(
+            "UPDATE booth_sessions SET used = 1 WHERE id = ?",
+            (session_id,)
+        )
+        conn.commit()
+
         return {"activate": True}
 
     return {"activate": False}
