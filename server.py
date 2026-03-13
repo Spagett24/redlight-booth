@@ -135,7 +135,7 @@ def booth_status():
         """
         SELECT id FROM booth_sessions
         WHERE used = 0
-        AND verified_at >= datetime('now', '-6 minutes')
+        AND verified_at >= datetime('now', '-30 seconds')
         ORDER BY verified_at
         LIMIT 1
         """
