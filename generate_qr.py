@@ -1,6 +1,6 @@
 import qrcode
 
-url = "234"
+url = "123456789"
 
 img = qrcode.make(url)
 
