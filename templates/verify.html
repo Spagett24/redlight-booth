@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Enter Code</h1>
+<p>Check your email for the verification code</p>
+
+{% if error %}
+<p style="color: red; margin-top: 10px;">{{ error }}</p>
+{% endif %}
+
+<form action="/verify_code" method="post">
+    <input type="hidden" name="email" value="{{ email }}">
+    <input type="text" name="code" placeholder="Enter code" required>
+    <button type="submit">Verify</button>
+</form>
+{% endblock %}

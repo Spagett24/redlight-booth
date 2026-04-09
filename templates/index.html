@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Red Light Therapy Booth</h1>
+
+<p style="color:#aaa; font-size:14px; margin-bottom:15px;">
+    This is a test experience for a new product we’re developing.
+</p>
+
+<!-- Image -->
+<img src="/static/images/download.jpeg"
+     style="width:100%; border-radius:10px; margin-bottom:20px; object-fit:cover;">
+
+<!-- What it does -->
+<div style="text-align:left; margin-bottom:20px;">
+    <h3 style="margin-bottom:10px;">What to Expect</h3>
+    <ul style="color:#aaa; padding-left:18px;">
+        <li>Supports muscle recovery and relaxation</li>
+        <li>May improve circulation and reduce soreness</li>
+        <li>Short guided session inside the booth</li>
+    </ul>
+</div>
+
+<!-- User instruction -->
+<p style="color:#aaa; font-size:14px;">
+    Enter your email to receive a code and begin your session.
+</p>
+
+<form action="/request_code" method="post" onsubmit="disableButton(this)">
+    <input type="email" name="email" placeholder="Enter email" required>
+    <button type="submit">Start Test Session</button>
+</form>
+
+{% endblock %}
