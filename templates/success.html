@@ -1,6 +1,47 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Success</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
-<h1 style="color: #00ff99;">Success</h1>
-<p>You may now enter the booth</p>
-{% endblock %}
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #111;
+            padding: 40px;
+            border-radius: 12px;
+            width: 340px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #00ff99;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h2>Success</h2>
+        <p>You may now enter the booth</p>
+
+    </div>
+</body>
+</html>

@@ -1,14 +1,14 @@
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import random
 import sqlite3
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
 
+# Serve static files (images)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # -----------------------------
 # Database setup
 # -----------------------------
@@ -31,41 +31,44 @@ conn.commit()
 pending_codes = {}
 
 # -----------------------------
+# Helper: load HTML file
+# -----------------------------
+def load_html(file_name: str):
+    with open(f"templates/{file_name}", encoding="utf-8") as f:
+        return f.read()
+
+# -----------------------------
 # Landing page
 # -----------------------------
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+def home():
+    return HTMLResponse(load_html("index.html"))
 
 # -----------------------------
 # Request code
 # -----------------------------
 @app.post("/request_code", response_class=HTMLResponse)
-def request_code(request: Request, email: str = Form(...)):
+def request_code(email: str = Form(...)):
     code = str(random.randint(100000, 999999))
     pending_codes[email] = code
 
     print(f"Verification code for {email}: {code}")
 
-    return templates.TemplateResponse(
-        "verify.html",
-        {
-            "request": request,
-            "email": email,
-            "error": None
-        }
-    )
+    html = load_html("verify.html")
+    html = html.replace("{{ email }}", email)
+    html = html.replace("{{ error }}", "")
+
+    return HTMLResponse(html)
 
 # -----------------------------
 # Verify code
 # -----------------------------
 @app.post("/verify_code", response_class=HTMLResponse)
-def verify_code(request: Request, email: str = Form(...), code: str = Form(...)):
+def verify_code(email: str = Form(...), code: str = Form(...)):
 
     stored = pending_codes.get(email)
 
     if stored and stored == code:
-        # create booth session
         cursor.execute(
             "INSERT INTO booth_sessions (email, used) VALUES (?, 0)",
             (email,)
@@ -74,20 +77,14 @@ def verify_code(request: Request, email: str = Form(...), code: str = Form(...))
 
         del pending_codes[email]
 
-        return templates.TemplateResponse(
-            "success.html",
-            {"request": request}
-        )
+        return HTMLResponse(load_html("success.html"))
 
-    # INVALID CODE PATH (fixed)
-    return templates.TemplateResponse(
-        "verify.html",
-        {
-            "request": request,
-            "email": email,
-            "error": "Invalid code. Try again."
-        }
-    )
+    # invalid code
+    html = load_html("verify.html")
+    html = html.replace("{{ email }}", email)
+    html = html.replace("{{ error }}", "Invalid code. Try again.")
+
+    return HTMLResponse(html)
 
 # -----------------------------
 # Raspberry Pi polling

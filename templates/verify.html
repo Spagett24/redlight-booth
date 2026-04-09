@@ -1,16 +1,70 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Code</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
-<h1>Enter Code</h1>
-<p>Check your email for the verification code</p>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-{% if error %}
-<p style="color: red; margin-top: 10px;">{{ error }}</p>
-{% endif %}
+        .container {
+            background: #111;
+            padding: 30px;
+            border-radius: 12px;
+            width: 340px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
 
-<form action="/verify_code" method="post">
-    <input type="hidden" name="email" value="{{ email }}">
-    <input type="text" name="code" placeholder="Enter code" required>
-    <button type="submit">Verify</button>
-</form>
-{% endblock %}
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            background: red;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #cc0000;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h2>Enter Verification Code</h2>
+
+        <p style="color:#aaa;">Check your email (or console for now)</p>
+
+        <p class="error">{{ error }}</p>
+
+        <form action="/verify_code" method="post">
+            <input type="hidden" name="email" value="{{ email }}">
+            <input type="text" name="code" placeholder="Enter code" required>
+            <button type="submit">Verify</button>
+        </form>
+
+    </div>
+</body>
+</html>

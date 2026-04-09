@@ -1,35 +1,88 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Red Light Booth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-<h1>Red Light Therapy Booth</h1>
+        .container {
+            background: #111;
+            padding: 30px;
+            border-radius: 12px;
+            width: 340px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
 
-<p style="color:#aaa; font-size:14px; margin-bottom:15px;">
-    This is a test experience for a new product we’re developing.
-</p>
+        img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
 
-<!-- Image -->
-<img src="/static/images/download.jpeg"
-     style="width:100%; border-radius:10px; margin-bottom:20px; object-fit:cover;">
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 6px;
+            border: none;
+        }
 
-<!-- What it does -->
-<div style="text-align:left; margin-bottom:20px;">
-    <h3 style="margin-bottom:10px;">What to Expect</h3>
-    <ul style="color:#aaa; padding-left:18px;">
-        <li>Supports muscle recovery and relaxation</li>
-        <li>May improve circulation and reduce soreness</li>
-        <li>Short guided session inside the booth</li>
-    </ul>
-</div>
+        button {
+            background: red;
+            color: white;
+            cursor: pointer;
+        }
 
-<!-- User instruction -->
-<p style="color:#aaa; font-size:14px;">
-    Enter your email to receive a code and begin your session.
-</p>
+        button:hover {
+            background: #cc0000;
+        }
 
-<form action="/request_code" method="post" onsubmit="disableButton(this)">
-    <input type="email" name="email" placeholder="Enter email" required>
-    <button type="submit">Start Test Session</button>
-</form>
+        ul {
+            text-align: left;
+            color: #aaa;
+        }
+    </style>
+</head>
 
-{% endblock %}
+<body>
+    <div class="container">
+
+        <img src="/static/images/download.jpeg">
+
+        <h2>Red Light Therapy Booth</h2>
+
+        <p style="color:#aaa; font-size:14px;">
+            This is a test experience for a new product we’re developing.
+        </p>
+
+        <div style="text-align:left;">
+            <h4>What to Expect</h4>
+            <ul>
+                <li>Supports muscle recovery</li>
+                <li>Improves circulation</li>
+                <li>Quick guided session</li>
+            </ul>
+        </div>
+
+        <form action="/request_code" method="post">
+            <input type="email" name="email" placeholder="Enter email" required>
+            <button type="submit">Start Session</button>
+        </form>
+
+    </div>
+</body>
+</html>
